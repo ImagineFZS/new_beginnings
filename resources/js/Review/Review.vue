@@ -1,29 +1,46 @@
 <template>
-    <div>
+    <div class="row">
 
-        <div v-if="loading">Loading...</div>
-        <div v-else>
-
-        <div v-if="alreadyReviewed">
-            <h3>Review Exists</h3>
-        </div>
-        <div v-else>
-
-            <div class="form-group">
-            <label class="text-muted">Select Rating</label>
-            <star-rating :rating="review.rating" class="fa-3x" v-on:rating:changed="review.rating = $event"></star-rating>
+        <div :class="[{'col-md-4': loading || !alreadyReviewed}, {'d-none': !loading && alreadyReviewed}]">
+            <div class="card">
+                 <div class="card-body">
+                    <div v-if="loading">Loading...</div>
+                    <div v-else>
+                        <p>Stayed at <router-link :to="{ name: 'Bookable', params: { id: booking.bookable.bookable_id } }">{{booking.bookable.title}}</router-link></p>
+                        <p>From {{ booking.from }} to {{ booking.to }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="content" class="text-muted">Description</label>
-                <textarea name="content" cols="30" rows="10" class="form-control" v-model="review.content"></textarea>
+        </div>
+
+        <div :class="[{'col-md-8': loading || !alreadyReviewed}, {'col-md-12': !loading && alreadyReviewed}]">
+
+            <div v-if="loading">Loading...</div>
+            <div v-else>
+
+            <div v-if="alreadyReviewed">
+                <h3>Review Exists</h3>
+            </div>
+            <div v-else>
+
+                <div class="form-group">
+                <label class="text-muted">Select Rating</label>
+                <star-rating :rating="review.rating" class="fa-3x" v-on:rating:changed="review.rating = $event"></star-rating>
+                </div>
+                <div class="form-group">
+                    <label for="content" class="text-muted">Description</label>
+                    <textarea name="content" cols="30" rows="10" class="form-control" v-model="review.content"></textarea>
+                </div>
+
+                <br>
+                <button style="width: 100%;" class="btn btn-lg btn-primary btn-block">Submit</button>
+
+            </div>
             </div>
 
-            <br>
-            <button style="width: 100%;" class="btn btn-lg btn-primary btn-block">Submit</button>
-
         </div>
 
-        </div>
+
 
     </div>
 </template>
@@ -39,7 +56,8 @@ export default {
                 content: null
             },
             existingReview: null,
-            loading: false
+            loading: false,
+            booking: null
         }
     },
     methods: {
@@ -51,14 +69,22 @@ export default {
     created(){
         this.loading =  true;
 
-        axios.get(`/api/reviews/${this.$route.params.id}`).then(response => (this.existingReview = response.data.data))
+        axios.get(`/api/reviews/${this.$route.params.id}`).then(response => {this.existingReview = response.data.data})
         .catch(error => {
+            if(error.response && error.response.status && (error.response.status == 404))
+            {
+                return axios.get(`/api/booking-by-review/${this.$route.params.id}`).then(response => {this.booking = response.data.data});
+            }
 
-        }).then(() => this.loading = false);
+        }).then(() => {console.log(this.booking); this.loading = false });
 
     },
     computed: {
         alreadyReviewed(){
+            return this.hasReview || !this.booking;
+        },
+        hasReview()
+        {
             if(this.existingReview != null)
             {
                 return true;
@@ -67,7 +93,19 @@ export default {
             {
                 return false;
             }
+        },
+        hasBooking()
+        {
+            if(this.booking != null)
+            {
+                return true;
+
+            }else
+            {
+                return false;
+            }
         }
+
     }
 }
 </script>

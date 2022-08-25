@@ -38252,7 +38252,8 @@ __webpack_require__.r(__webpack_exports__);
         content: null
       },
       existingReview: null,
-      loading: false
+      loading: false,
+      booking: null
     };
   },
   methods: {
@@ -38265,14 +38266,31 @@ __webpack_require__.r(__webpack_exports__);
 
     this.loading = true;
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/reviews/".concat(this.$route.params.id)).then(function (response) {
-      return _this.existingReview = response.data.data;
-    })["catch"](function (error) {}).then(function () {
-      return _this.loading = false;
+      _this.existingReview = response.data.data;
+    })["catch"](function (error) {
+      if (error.response && error.response.status && error.response.status == 404) {
+        return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/booking-by-review/".concat(_this.$route.params.id)).then(function (response) {
+          _this.booking = response.data.data;
+        });
+      }
+    }).then(function () {
+      console.log(_this.booking);
+      _this.loading = false;
     });
   },
   computed: {
     alreadyReviewed: function alreadyReviewed() {
+      return this.hasReview || !this.booking;
+    },
+    hasReview: function hasReview() {
       if (this.existingReview != null) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    hasBooking: function hasBooking() {
+      if (this.booking != null) {
         return true;
       } else {
         return false;
@@ -38696,49 +38714,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  key: 0
+  "class": "row"
 };
 var _hoisted_2 = {
-  key: 1
+  "class": "card"
 };
 var _hoisted_3 = {
+  "class": "card-body"
+};
+var _hoisted_4 = {
+  key: 0
+};
+var _hoisted_5 = {
+  key: 1
+};
+
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Stayed at ");
+
+var _hoisted_7 = {
+  key: 0
+};
+var _hoisted_8 = {
+  key: 1
+};
+var _hoisted_9 = {
   key: 0
 };
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Review Exists", -1
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Review Exists", -1
 /* HOISTED */
 );
 
-var _hoisted_5 = [_hoisted_4];
-var _hoisted_6 = {
+var _hoisted_11 = [_hoisted_10];
+var _hoisted_12 = {
   key: 1
 };
-var _hoisted_7 = {
+var _hoisted_13 = {
   "class": "form-group"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "text-muted"
 }, "Select Rating", -1
 /* HOISTED */
 );
 
-var _hoisted_9 = {
+var _hoisted_15 = {
   "class": "form-group"
 };
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "content",
   "class": "text-muted"
 }, "Description", -1
 /* HOISTED */
 );
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   style: {
     "width": "100%"
   },
@@ -38748,9 +38784,45 @@ var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 );
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
+
   var _component_star_rating = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("star-rating");
 
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, "Loading...")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [$options.alreadyReviewed ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, _hoisted_5)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_star_rating, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
+      'col-md-4': $data.loading || !$options.alreadyReviewed
+    }, {
+      'd-none': !$data.loading && $options.alreadyReviewed
+    }])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, "Loading...")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+    to: {
+      name: 'Bookable',
+      params: {
+        id: $data.booking.bookable.bookable_id
+      }
+    }
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.booking.bookable.title), 1
+      /* TEXT */
+      )];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["to"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "From " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.booking.from) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.booking.to), 1
+  /* TEXT */
+  )]))])])], 2
+  /* CLASS */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
+      'col-md-8': $data.loading || !$options.alreadyReviewed
+    }, {
+      'col-md-12': !$data.loading && $options.alreadyReviewed
+    }])
+  }, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, "Loading...")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [$options.alreadyReviewed ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, _hoisted_11)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_star_rating, {
     rating: $data.review.rating,
     "class": "fa-3x",
     "onRating:changed": _cache[0] || (_cache[0] = function ($event) {
@@ -38758,7 +38830,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, null, 8
   /* PROPS */
-  , ["rating"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+  , ["rating"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     name: "content",
     cols: "30",
     rows: "10",
@@ -38768,7 +38840,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.review.content]])]), _hoisted_11, _hoisted_12]))]))]);
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.review.content]])]), _hoisted_17, _hoisted_18]))]))], 2
+  /* CLASS */
+  )]);
 }
 
 /***/ }),

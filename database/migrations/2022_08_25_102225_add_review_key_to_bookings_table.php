@@ -14,7 +14,7 @@ class AddReviewKeyToBookingsTable extends Migration
     public function up()
     {
         Schema::table('bookings', function (Blueprint $table) {
-            //
+            $table->uuid('review_key');
         });
     }
 
@@ -26,7 +26,7 @@ class AddReviewKeyToBookingsTable extends Migration
     public function down()
     {
         Schema::table('bookings', function (Blueprint $table) {
-            //
+            $table->dropColumn('review_key');
         });
     }
 }
