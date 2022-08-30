@@ -10,7 +10,7 @@
             <label for="from">From</label>
             <input type="text" name="from" class="form-control form-control-sm" placeholder="Start Date" v-model="from" @keyup.enter="check" :class="[{'is-invalid': this.errorFor('from')}]">
 
-            <div class="invalid-feedback" v-for="(error, index) in this.errorFor('from')" :key="'from' + index">{{error}}</div>
+            <v-errors :errors="errorFor('from')"></v-errors>
 
         </div>
 
@@ -18,7 +18,7 @@
             <label for="to">To</label>
             <input type="text" name="to" class="form-control form-control-sm" placeholder="End Date" v-model="to" @keyup.enter="check" :class="[{'is-invalid': this.errorFor('to')}]">
 
-            <div class="invalid-feedback" v-for="(error, index) in this.errorFor('to')" :key="'to' + index">{{error}}</div>
+            <v-errors :errors="errorFor('to')"></v-errors>
 
         </div>
     </div>
@@ -31,7 +31,12 @@
 </template>
 
 <script>
+
+import { is422 } from "./../shared/utils/response";
+import validationErrors from "./../shared/mixins/validateErrors";
+
 export default{
+    mixins: [validationErrors],
     props:{
         bookableID: String
     },
@@ -53,7 +58,7 @@ export default{
                 this.status = response.status;
 
             }).catch(error => {
-                if(error.response.status == 422)
+                if(is422(error))
                 {
                     this.errors = error.response.data.errors;
                 }
