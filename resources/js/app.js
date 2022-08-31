@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 import { createApp } from 'vue';
+import Vuex from 'vuex';
 import router from "./routes";
 import Index from "./index.vue";
 import moment from 'moment';
@@ -8,6 +9,7 @@ import StarRating from "./shared/components/StarRating.vue";
 import FatalError from "./shared/components/FatalError.vue";
 import ValidationErrors from "./shared/components/ValidationErrors.vue";
 import Success from "./shared/components/Success.vue";
+import storeDefinition from "./store";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -17,9 +19,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 library.add(faStar)
 library.add(fas)
 
+const store = new Vuex.Store(storeDefinition);
+
 const app = createApp({})
 
 app.use(router)
+app.use(Vuex);
+app.use(store);
 
 app.component('Index', Index)
 app.component('star-rating', StarRating)

@@ -30,7 +30,7 @@
 <script>
 export default{
     props:{
-        bookableID: String
+        bookableID: [String, Number]
     },
     data(){
         return{
