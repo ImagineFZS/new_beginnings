@@ -23,11 +23,11 @@ class Bookable extends Model
     {
         if($this->bookings()->betweenDates($from, $to)->count() == 0)
         {
-            return false;
+            return true;
 
         }else
         {
-            return true;
+            return false;
         }
     }
 }

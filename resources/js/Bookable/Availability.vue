@@ -1,8 +1,15 @@
 <template>
     <div>
         <h6 class="text-uppercase text-secondary font-weight-bolder">Check Availability
-            <span v-if="noAvailability" class="text-danger">(Not Available!)</span>
-            <span v-if="hasAvailability" class="text-success">(Available!)</span>
+
+            <Transition name="fade">
+                <span v-if="noAvailability" class="text-danger">(Not Available!)</span>
+            </Transition>
+
+            <Transition name="fade">
+                <span v-if="hasAvailability" class="text-success">(Available!)</span>
+            </Transition>
+
         </h6>
 
     <div class="row">
@@ -37,6 +44,7 @@ import validationErrors from "./../shared/mixins/validateErrors";
 
 export default{
     mixins: [validationErrors],
+    emits: ["availability"],
     props:{
         bookableID: [String, Number]
     },
@@ -50,7 +58,7 @@ export default{
         }
     },
     methods: {
-        check(){
+        async check(){
             this.loading = true;
             this.errors = null;
 
@@ -59,18 +67,23 @@ export default{
                 to: this.to
             });
 
-            axios.get(`/api/bookables/${this.bookableID}/availability?from=${this.from}&to=${this.to}`
-            ).then(response => {
-                this.status = response.status;
+            try{
 
-            }).catch(error => {
+                this.status = (await axios.get(`/api/bookables/${this.bookableID}/availability?from=${this.from}&to=${this.to}`)).status;
+                this.$emit("availability", this.hasAvailability);
+
+            }catch(error){
+
                 if(is422(error))
                 {
                     this.errors = error.response.data.errors;
                 }
                 this.status = error.response.status;
+                this.$emit("availability", this.hasAvailability);
+            }
 
-            }).then(() => this.loading = false);
+            this.loading = false;
+
         },
         errorFor(field)
         {
@@ -82,21 +95,21 @@ export default{
 
             if(this.status == 422 && this.status != null)
             {
-                return 422;
+                return true;
             }
         },
         hasAvailability()
         {
             if(this.status == 200)
             {
-                return 200;
+                return true;
             }
         },
         noAvailability()
         {
             if(this.status == 404)
             {
-                return 404;
+                return true;
             }
         }
     },
