@@ -3,7 +3,7 @@
         <nav class="navbar bg-white border-bottom navbar-light">
             <router-link class="navbar-brand mr-auto" :to="{name: 'Home'}">Home</router-link>
 
-            <router-link class="btn nav-button" :to="{name: 'Home'}">
+            <router-link class="btn nav-button" :to="{name: 'basket'}">
                 Basket
                 <span v-if="itemsInBasket" class="badge badge-secondary" style="color: black">{{ itemsInBasket }}</span>
             </router-link>

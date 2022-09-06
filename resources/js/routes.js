@@ -1,6 +1,7 @@
 import Bookables from "./Bookables/Bookables.vue";
 import Bookable from "./Bookable/Bookable.vue";
 import Review from "./Review/Review.vue";
+import Basket from "./Basket/Basket.vue";
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
         component: Review,
         name: "Review",
     },
+    {
+        path: "/basket",
+        component: Basket,
+        name: "basket"
+    }
 ];
 
 const router = createRouter({
